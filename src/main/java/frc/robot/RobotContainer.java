@@ -12,10 +12,7 @@ import frc.robot.commands.ballintake.CalibrateBallIntakeCommand;
 import frc.robot.commands.ballintake.HoldBallIntakeExtendCommand;
 import frc.robot.commands.ballintake.ToggleBallIntakeExtendCommand;
 import frc.robot.commands.ballintake.ReverseBallIntakeAndFeederCommand;
-import frc.robot.commands.climber.CalibrateClimberCommand;
-import frc.robot.commands.climber.ClimbCommand;
 import frc.robot.subsystems.BallIntake;
-import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.Shooter;
@@ -44,7 +41,6 @@ public class RobotContainer {
     // Subsystems
     private final Drivetrain robotDrive = new Drivetrain();
     private final BallIntake m_ballIntake = new BallIntake();
-    private final Climber climber = new Climber();
     private final Shooter m_shooter = new Shooter(robotDrive);
 
     // Vision subsystem for AprilTag detection and pose estimation.
@@ -71,7 +67,6 @@ public class RobotContainer {
     // Field pose chooser — selects where the robot drives when the pose-nav button
     // is held
     private final SendableChooser<Pose2d> fieldPoseChooser = new SendableChooser<>();
-    private final SendableChooser<Pose2d> climbStartPoseChooser = new SendableChooser<>();
     private final SendableChooser<PIDConstants> ppTranslationPidChooser = new SendableChooser<>();
     private final SendableChooser<PIDConstants> ppRotationPidChooser = new SendableChooser<>();
     private final SendableChooser<Boolean> intakeOverrideCalibrationLimitsChooser = new SendableChooser<>();
@@ -107,7 +102,6 @@ public class RobotContainer {
         configureBindings();
 
         // Configure field pose chooser
-        configureClimbStartPoseChooser();
         configurePathPlannerPidChoosers();
         configureIntakeOverrideChooser();
         configureVisionTuning();
@@ -147,25 +141,6 @@ public class RobotContainer {
     }
 
     /**
-     * Populates and publishes the field pose chooser on SmartDashboard.
-     *
-     * Coordinates are blue-alliance-relative. GoToPositionRelativeCommand mirrors
-     * them automatically when the DriverStation reports red alliance:
-     * red_x = fieldLength - x, red_y = fieldWidth - y, red_heading = 180 - heading
-     */
-    private void configureClimbStartPoseChooser() {
-        // These poses are predefined constants so the team can place the robot at known climb
-        // Select positions from SmartDashboard before running the command.
-        climbStartPoseChooser.setDefaultOption("Blue Left", ClimbConstants.kBlueLeftStartPose);
-        climbStartPoseChooser.addOption("Blue Right", ClimbConstants.kBlueRightStartPose);
-        climbStartPoseChooser.addOption("Red Left", ClimbConstants.kRedLeftStartPose);
-        climbStartPoseChooser.addOption("Red Right", ClimbConstants.kRedRightStartPose);
-        climbStartPoseChooser.addOption("PracticePose", ClimbConstants.PracticePose);
-
-        SmartDashboard.putData("Climb Start Pose", climbStartPoseChooser);
-    }
-
-    /**
      * Configures Shuffleboard choosers for PathPlanner translation/rotation PID presets.
      */
     private void configurePathPlannerPidChoosers() {
@@ -192,7 +167,6 @@ public class RobotContainer {
 
     private void configureDashboardCommands() {
         // putData publishes a clickable command button to SmartDashboard.
-        SmartDashboard.putData("Climb Command", new ClimbCommand(robotDrive, climber, this::getSelectedClimbStartPose));
         SmartDashboard.putData(
             "Intake Hold Extend",
             new HoldBallIntakeExtendCommand(m_ballIntake, 1.0, this::isIntakeOverrideCalibrationAndLimitsEnabled));
@@ -207,9 +181,6 @@ public class RobotContainer {
     }
 
     private void registerPathPlannerCommands() {
-        NamedCommands.registerCommand(
-                "climber on",
-                new ClimbCommand(robotDrive, climber, this::getSelectedClimbStartPose));
         NamedCommands.registerCommand(
                 "shooter on",
                 Commands.runOnce(() -> {
@@ -244,11 +215,6 @@ public class RobotContainer {
                 new ReverseBallIntakeAndFeederCommand(m_ballIntake, m_shooter)
                     .withTimeout(3.5)
                 );
-    }
-
-    private Pose2d getSelectedClimbStartPose() {
-        Pose2d selectedPose = climbStartPoseChooser.getSelected();
-        return selectedPose != null ? selectedPose : ClimbConstants.kBlueLeftStartPose;
     }
 
     private void configureVisionTuning() {
@@ -304,7 +270,7 @@ public class RobotContainer {
     private void configureBindings() {
 
     Trigger pointRearToHub, intakeToggle, zeroHeading, extendToggle, shootTrigger, turboSpeedTrigger;
-    Trigger killshooter, killIntake, climberExtend, climberRetract, vortexSpeedShot, jiggleIntake, calibrateIntake, holdIntakeExtend, holdIntakeRetract, reverseIntakeAndFeeder;
+    Trigger killshooter, killIntake, vortexSpeedShot, jiggleIntake, calibrateIntake, holdIntakeExtend, holdIntakeRetract, reverseIntakeAndFeeder;
         DoubleSupplier leftY, leftX;
 
         if (driverPS5 != null) {
@@ -332,8 +298,6 @@ public class RobotContainer {
         if (operatorPS5 !=null) {
             killshooter = operatorPS5.square();
             killIntake = operatorPS5.circle();
-            climberExtend = operatorPS5.triangle();
-            climberRetract = operatorPS5.cross();
             vortexSpeedShot = operatorPS5.povLeft();
             jiggleIntake = operatorPS5.L2();
             calibrateIntake = operatorPS5.R1();
@@ -344,8 +308,6 @@ public class RobotContainer {
         } else {
             killshooter = operatorXbox.x();
             killIntake = operatorXbox.b();
-            climberExtend = operatorXbox.y();
-            climberRetract = operatorXbox.a();
             vortexSpeedShot = operatorXbox.povLeft();
             jiggleIntake = operatorXbox.leftTrigger();
             calibrateIntake = operatorXbox.rightBumper();
@@ -397,9 +359,6 @@ public class RobotContainer {
                 m_ballIntake,
                 -1.0,
                 this::isIntakeOverrideCalibrationAndLimitsEnabled));
-
-        climberExtend.whileTrue(Commands.startEnd(climber::extendClimber, climber::stop, climber));
-        climberRetract.whileTrue(Commands.startEnd(climber::retractClimber, climber::stop, climber));
         vortexSpeedShot.whileTrue(new VortexSpeedShotCommand(m_shooter));
         reverseIntakeAndFeeder.whileTrue(new ReverseBallIntakeAndFeederCommand(m_ballIntake, m_shooter));
     }
@@ -431,11 +390,6 @@ public class RobotContainer {
                         Commands.none(),
                         new PrintCommand("BallIntake calibration failed."),
                         m_ballIntake::isCalibrated))
-                .andThen(new CalibrateClimberCommand(climber))
-                .andThen(new ConditionalCommand(
-                        Commands.none(),
-                        new PrintCommand("Climber calibration failed."),
-                        climber::isCalibrated))
                 .andThen(selectedAuto);
 
     }
@@ -447,13 +401,6 @@ public class RobotContainer {
                     Commands.none(),
                     new CalibrateBallIntakeCommand(m_ballIntake),
                     m_ballIntake::isCalibrated
-                )
-            )
-            .andThen(
-                new ConditionalCommand(
-                    Commands.none(),
-                    new CalibrateClimberCommand(climber),
-                    climber::isCalibrated
                 )
             );
     }

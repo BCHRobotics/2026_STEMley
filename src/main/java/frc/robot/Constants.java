@@ -119,16 +119,12 @@ public final class Constants {
     public static final boolean[] kCamerasEnabled = {
       true,  // ShooterLeft_Camera1
       true,  // ShooterRight_Camera
-      // true,  // Rear_Left_Camera
-      // true,   // Rear_Right_Camera
     };
     
     // Camera names
     public static final String[] kCameraNames = {
       "ShooterLeft_Camera1",  //ShooterLeft_Camera1; facing robot forward, intake side
       "ShooterRight_Camera",  //ShooterRight_Camera
-      // "Rear_Left_Camera",  // Rear_Left_Camera
-      // "Rear_Right_Camera"   // Rear_Right_Camera
     };
     
     // Transforms from robot center to each camera (in meters and radians)
@@ -143,13 +139,6 @@ public final class Constants {
         new Translation3d(Units.inchesToMeters(-11.475), Units.inchesToMeters(-11.253), Units.inchesToMeters(20.783)),
         new Rotation3d(0, 0, Math.toRadians(-150))
       ),
-      // // Rear_Left_Camera 
-      // new Transform3d(new Translation3d(Units.inchesToMeters(0), Units.inchesToMeters(4.25), Units.inchesToMeters(36)),
-      //                 new Rotation3d(0, 0, Math.toRadians(180))),
-
-      // // Rear_Right_Camera
-      // new Transform3d(new Translation3d(Units.inchesToMeters(0), Units.inchesToMeters(-4), Units.inchesToMeters(36)),
-      //                 new Rotation3d(0, 0, Math.toRadians(180)))
     };
     
     // Pose estimation tuning
@@ -294,50 +283,6 @@ public final class Constants {
 
     public static final double kYawTolerance = 3.0; // degrees
     public static final double kMaxRotationSpeed = 0.3; // rad/s
-  }
-
-  public static final class ClimbConstants {
-    public static final int kMotorCanId = 40;
-    public static final int kProximitySwitchChannel = 1;
-    public static final boolean kProximitySwitchActiveLow = true;
-    public static final boolean kMotorInverted = false;
-    public static final int kMotorCurrentLimit = 60;
-    public static final double kExtendSpeed = 0.5;
-    public static final double kRetractSpeed =-0.5;
-    public static final double kCurrentSpikeThresholdAmps = 40.0;
-    public static final double kCurrentAverageWindowSeconds = 0.1;
-
-    // Motor encoder position at full extension (rotations). 0 = fully retracted.
-    // TODO: measure and update this value during commissioning.
-    public static final double kEncoderExtendedPosition = 60.0;
-
-    // The requested starting locations are measured from the field walls, then converted to
-    // WPILib field coordinates so commands can use the same Pose2d math as the rest of the robot.
-    public static final double kStartDistanceFromEndWallMeters = Units.inchesToMeters(44.0);
-    public static final double kStartDistanceFromSideWallMeters = Units.inchesToMeters(132.0);
-    public static final double kDriveForwardDistanceMeters = Units.inchesToMeters(20.0);
-    public static final double kDriveMaxSpeedMetersPerSecond = 0.5;
-
-    public static final Pose2d kBlueRightStartPose = new Pose2d(
-        kStartDistanceFromEndWallMeters,
-        NavigationConstants.kFieldWidth - kStartDistanceFromSideWallMeters,
-        Rotation2d.fromDegrees(-90.0));
-    public static final Pose2d kBlueLeftStartPose = new Pose2d(
-        kStartDistanceFromEndWallMeters,
-        kStartDistanceFromSideWallMeters,
-        Rotation2d.fromDegrees(90.0));
-    public static final Pose2d kRedLeftStartPose = new Pose2d(
-        NavigationConstants.kFieldLength - kStartDistanceFromEndWallMeters,
-        kStartDistanceFromSideWallMeters,
-        Rotation2d.fromDegrees(90.0));
-    public static final Pose2d kRedRightStartPose = new Pose2d(
-        NavigationConstants.kFieldLength - kStartDistanceFromEndWallMeters,
-        NavigationConstants.kFieldWidth - kStartDistanceFromSideWallMeters,
-        Rotation2d.fromDegrees(90.0));
-    public static final Pose2d PracticePose = new Pose2d(
-        16 - 2.959,
-        3.948,        
-        Rotation2d.fromDegrees(0.0));
   }
 
   public static final class BallIntakeConstants {
