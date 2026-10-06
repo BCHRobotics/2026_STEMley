@@ -38,12 +38,16 @@ public class Shooter extends SubsystemBase {
     private final SparkMax feederMotor;
     private final SparkFlex shooterMotor1;
     private final SparkFlex shooterMotor2;
+    private final SparkFlex shooterMotor3;
+    private final SparkFlex shooterMotor4;
     private final SparkFlexConfig shooter1Config;
     private final SparkFlexConfig shooter2Config;
+    private final SparkFlexConfig shooter3Config;
+    private final SparkFlexConfig shooter4Config;
     private final Drivetrain drivetrain;
     private final Timer shooterSpinTimer = new Timer();
 
-    // On-board closed-loop controller runs the PID at 1 kHz on the SPARK MAX
+    // On-board closed-loop controller runs the PID at 1 kHz on the SPARK Flex
     // (vs. 50 Hz if run on the RoboRIO with WPILib PIDController)
     private final SparkClosedLoopController flywheelController1;
 
@@ -61,8 +65,14 @@ public class Shooter extends SubsystemBase {
         feederMotor   = new SparkMax(ShooterConstants.FEEDER_CAN_ID,   MotorType.kBrushless);
         shooterMotor1 = new SparkFlex(ShooterConstants.SHOOTER1_CAN_ID, MotorType.kBrushless);
         shooterMotor2 = new SparkFlex(ShooterConstants.SHOOTER2_CAN_ID, MotorType.kBrushless);
+        // CHANGE #1: Four NEO Vortex motors drive one shooter through SPARK Flex controllers.
+        // Only motor 1 controls RPM; motors 2–4 follow its output.
+        shooterMotor3 = new SparkFlex(ShooterConstants.SHOOTER3_CAN_ID, MotorType.kBrushless);
+        shooterMotor4 = new SparkFlex(ShooterConstants.SHOOTER4_CAN_ID, MotorType.kBrushless);
         shooter1Config = new SparkFlexConfig();
         shooter2Config = new SparkFlexConfig();
+        shooter3Config = new SparkFlexConfig();
+        shooter4Config = new SparkFlexConfig();
 
         flywheelController1 = shooterMotor1.getClosedLoopController();
 
@@ -92,6 +102,8 @@ public class Shooter extends SubsystemBase {
         SmartDashboard.putNumber("Shooter/ReadyRPM", ShooterConstants.readyRpm);
         SmartDashboard.putNumber("Shooter/Shooter1RPM", shooterMotor1.getEncoder().getVelocity());
         SmartDashboard.putNumber("Shooter/Shooter2RPM", shooterMotor2.getEncoder().getVelocity());
+        SmartDashboard.putNumber("Shooter/Shooter3RPM", shooterMotor3.getEncoder().getVelocity());
+        SmartDashboard.putNumber("Shooter/Shooter4RPM", shooterMotor4.getEncoder().getVelocity());
         SmartDashboard.putNumber("Shooter/AppliedFeederSpeed", currentFeederSpeed);
         SmartDashboard.putBoolean("Shooter/VortexSpeedShotActive", isVortexSpeedShotActive);
         SmartDashboard.putBoolean("Shooter/VortexSpeedShotReady", isVortexSpeedShotReady());
@@ -101,6 +113,8 @@ public class Shooter extends SubsystemBase {
         Logger.recordOutput("Shooter/ReadyRPM", ShooterConstants.readyRpm);
         Logger.recordOutput("Shooter/Shooter1RPM", shooterMotor1.getEncoder().getVelocity());
         Logger.recordOutput("Shooter/Shooter2RPM", shooterMotor2.getEncoder().getVelocity());
+        Logger.recordOutput("Shooter/Shooter3RPM", shooterMotor3.getEncoder().getVelocity());
+        Logger.recordOutput("Shooter/Shooter4RPM", shooterMotor4.getEncoder().getVelocity());
         Logger.recordOutput("Shooter/AppliedFeederSpeed", currentFeederSpeed);
         Logger.recordOutput("Shooter/VortexSpeedShotActive", isVortexSpeedShotActive);
         Logger.recordOutput("Shooter/RPM", shooterMotor1.getEncoder().getVelocity());
@@ -108,6 +122,8 @@ public class Shooter extends SubsystemBase {
         Logger.recordOutput("Shooter/Active", isShooterActive);
         Logger.recordOutput("Shooter/Motor1CurrentAmps", shooterMotor1.getOutputCurrent());
         Logger.recordOutput("Shooter/Motor2CurrentAmps", shooterMotor2.getOutputCurrent());
+        Logger.recordOutput("Shooter/Motor3CurrentAmps", shooterMotor3.getOutputCurrent());
+        Logger.recordOutput("Shooter/Motor4CurrentAmps", shooterMotor4.getOutputCurrent());
         Logger.recordOutput("Shooter/FeederCurrentAmps", feederMotor.getOutputCurrent());
         Logger.recordOutput("Shooter/RPMError", shooterMotor1.getEncoder().getVelocity() - ShooterConstants.targetRpm);
     }
@@ -146,14 +162,11 @@ public class Shooter extends SubsystemBase {
             ShooterConstants.kD1,
             ShooterConstants.kF1);
 
-        // follow(id, inverted=true) → spins opposite direction to motor1,
-        // which physically makes both wheels shoot in the same direction.
-        shooter2Config
-            .follow(ShooterConstants.SHOOTER1_CAN_ID, true)
-            .idleMode(IdleMode.kCoast);  // Coast so the flywheel spins down naturally
-
-        shooter2Config.encoder
-            .velocityConversionFactor(1.0);  // RPM (native NEO units)
+        // CHANGE #2: All three followers assist the same shooter without relative inversion.
+        // Confirm the physical motor mounting agrees with this direction before running.
+        configureFollower(shooter2Config);
+        configureFollower(shooter3Config);
+        configureFollower(shooter4Config);
 
         feederMotor.configure(
             feederConfig,
@@ -169,6 +182,21 @@ public class Shooter extends SubsystemBase {
             shooter2Config,
             ResetMode.kResetSafeParameters,
             PersistMode.kPersistParameters);
+        shooterMotor3.configure(
+            shooter3Config,
+            ResetMode.kResetSafeParameters,
+            PersistMode.kPersistParameters);
+        shooterMotor4.configure(
+            shooter4Config,
+            ResetMode.kResetSafeParameters,
+            PersistMode.kPersistParameters);
+    }
+
+    private void configureFollower(SparkFlexConfig config) {
+        config
+            .follow(ShooterConstants.SHOOTER1_CAN_ID, false)
+            .idleMode(IdleMode.kCoast);
+        config.encoder.velocityConversionFactor(1.0);  // Native NEO Vortex RPM
     }
 
     /** @return true when the flywheel has reached the ready RPM threshold */
@@ -223,15 +251,21 @@ public class Shooter extends SubsystemBase {
         setShooterIdleMode(IdleMode.kBrake);
         shooterMotor1.stopMotor();
         shooterMotor2.stopMotor();
+        shooterMotor3.stopMotor();
+        shooterMotor4.stopMotor();
     }
 
     private void setShooterIdleMode(IdleMode mode) {
-        // Only change idle mode; reuse the existing config
+        // CHANGE #3: Change all four idle modes while retaining the followers' configuration.
         shooter1Config.idleMode(mode);
         shooter2Config.idleMode(mode);
+        shooter3Config.idleMode(mode);
+        shooter4Config.idleMode(mode);
 
         shooterMotor1.configure(shooter1Config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
         shooterMotor2.configure(shooter2Config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+        shooterMotor3.configure(shooter3Config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+        shooterMotor4.configure(shooter4Config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
     }
 
     /** Runs the feeder belt at {@link #feederSpeed} */
@@ -360,6 +394,8 @@ public class Shooter extends SubsystemBase {
         if (!DriverStation.isEnabled()) {
             shooterMotor1.set(0);
             shooterMotor2.set(0);
+            shooterMotor3.set(0);
+            shooterMotor4.set(0);
             isFeederReversed = false;
         } else if (isVortexSpeedShotActive) {
             flywheelController1.setSetpoint(VORTEX_SPEED_SHOT_TARGET_RPM, ControlType.kVelocity);
@@ -367,7 +403,7 @@ public class Shooter extends SubsystemBase {
                 feederOutput = ShooterConstants.feederSpeed;
             }
         } else if (isShooterActive) {
-            // Delegate PID calculation to the SPARK MAX (runs at 1 kHz on-board)
+            // Delegate PID calculation to the leader SPARK Flex (runs at 1 kHz on-board)
             flywheelController1.setSetpoint(ShooterConstants.targetRpm, ControlType.kVelocity);
             if (isCharged() && shooterSpinTimer.hasElapsed(0.5)) {  // Add a short delay after reaching target RPM
                 feederOutput = currentFeederSpeed;

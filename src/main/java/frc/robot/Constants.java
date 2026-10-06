@@ -340,5 +340,8 @@ public final class Constants {
     public static final int FEEDER_CAN_ID = 21;
     public static final int SHOOTER1_CAN_ID = 22;
     public static final int SHOOTER2_CAN_ID = 23;
+    // CHANGE #1: One NEO Vortex shooter; CAN 22 leads CAN 23, 24 and 25.
+    public static final int SHOOTER3_CAN_ID = 24;
+    public static final int SHOOTER4_CAN_ID = 25;
   }
 }
