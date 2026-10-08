@@ -164,9 +164,9 @@ public class Shooter extends SubsystemBase {
 
         // CHANGE #2: All three followers assist the same shooter without relative inversion.
         // Confirm the physical motor mounting agrees with this direction before running.
-        configureFollower(shooter2Config);
-        configureFollower(shooter3Config);
-        configureFollower(shooter4Config);
+        configureFollower(shooter2Config, true);
+        configureFollower(shooter3Config, true);
+        configureFollower(shooter4Config, true);
 
         feederMotor.configure(
             feederConfig,
@@ -192,9 +192,9 @@ public class Shooter extends SubsystemBase {
             PersistMode.kPersistParameters);
     }
 
-    private void configureFollower(SparkFlexConfig config) {
+    private void configureFollower(SparkFlexConfig config, boolean inverted) {
         config
-            .follow(ShooterConstants.SHOOTER1_CAN_ID, false)
+            .follow(ShooterConstants.SHOOTER1_CAN_ID, inverted)
             .idleMode(IdleMode.kCoast);
         config.encoder.velocityConversionFactor(1.0);  // Native NEO Vortex RPM
     }
