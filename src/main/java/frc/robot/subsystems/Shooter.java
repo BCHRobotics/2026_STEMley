@@ -419,3 +419,10 @@ public class Shooter extends SubsystemBase {
         feederMotor.set(feederOutput);
     }
 }
+
+//AI Generated Comments from random words: 
+//halloween is here and the spooky season is upon us! 
+//the lathes are turning, the pumpkins are glowing, ad the robots are ready to roll. remember to keep your code clean and your motors spooky!
+//Ladders are for the weak, we use elevators!
+//Gas chambers are more fun than stairs, but remember to keep it safe!
+//Mental health is not important, but your robot's health is!
