@@ -1,6 +1,10 @@
 # Robot Utilities
 
-Python utilities for monitoring and debugging robot systems.
+Utilities for monitoring and debugging robot systems.
+
+## Rubik Pi / PhotonVision support
+
+See [rubik-pi/README.md](rubik-pi/README.md) for the manual PhotonVision JAR updater and isolated tests. Start with the [student guides](../docs/rubik-pi/README.md) for Cockpit, building a Linux ARM64 JAR, and safely activating it. These tools manage the coprocessor, not the roboRIO.
 
 ## NetworkTables Vision Monitor
 

@@ -186,6 +186,8 @@ Deploy with the WPILib VS Code commands or the usual driver-station workflow for
 
 Additional documentation in `docs/`:
 
+- [Rubik Pi student support guides](docs/rubik-pi/README.md): PhotonVision JAR builds/updates, Cockpit management, and mentor-only experimental AprilTag acceleration notes. The updater is in [`utilities/rubik-pi/`](utilities/rubik-pi/README.md); it does not deploy robot code.
+
 - `docs/gyro.md`
 - `docs/PHOTON_SETUP.md`
 - `docs/vision_tuning.md`
