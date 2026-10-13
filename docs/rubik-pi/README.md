@@ -27,14 +27,14 @@ The robot project remains WPILib 2026 / Java 17. A Java 25 requirement in these 
 These are convenient examples, not permanent robot-network settings:
 
 - SSH account: `photon`
-- Lab address: `10.10.106.72`
-- PhotonVision: `http://10.10.106.72:5800/`
-- Cockpit: `https://10.10.106.72:9090/`
+- Lab address: `10.12.86.xx`
+- PhotonVision: `http://10.12.86.xx:5800/`
+- Cockpit: `https://10.12.86.xx:9090/`
 - PhotonVision service: `photonvision.service`
 - Installed application: `/opt/photonvision/photonvision.jar`
 - Configuration: `/opt/photonvision/photonvision_config/`
 
-Confirm the current address with a mentor. This lab subnet is not the normal Team 2386 robot-network addressing plan. Do not change network settings just to make an example match.
+Confirm the current address.
 
 ## FRC safety and sign-off
 
