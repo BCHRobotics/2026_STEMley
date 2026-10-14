@@ -13,6 +13,7 @@ import frc.robot.webserver.VisionWebServer;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.LEDConstants;
 import frc.robot.Constants.OIConstants;
+import frc.utils.HubSchedule;
 
 import java.util.List;
 import java.util.Set;
@@ -63,19 +64,6 @@ public class RobotContainer {
     private final SendableChooser<PIDConstants> ppTranslationPidChooser = new SendableChooser<>();
     private final SendableChooser<PIDConstants> ppRotationPidChooser    = new SendableChooser<>();
 
-    // ── Match-time constants for the shift-window LED indicator ──────────────
-    /**
-     * Total teleop duration in seconds.
-     * {@code DriverStation.getMatchTime()} counts DOWN from this value.
-     */
-    private static final double kTeleopDuration = 135.0;
-
-    /**
-     * Duration of each shooting-window shift in seconds.
-     * Windows alternate: 0–25 s = ON (cyan), 25–50 s = OFF (dark blue), 50–75 s = ON, …
-     */
-    private static final double kShiftDuration = 25.0;
-
     // ── Constructor ───────────────────────────────────────────────────────────
 
     public RobotContainer() {
@@ -106,141 +94,90 @@ public class RobotContainer {
     /**
      * Updates the LED strip to reflect the current robot state.
      *
-     * <p>Call once per {@code robotPeriodic()} loop.  A single priority-ordered
-     * if-chain is used so the first matching condition wins and no state can
-     * accidentally fire at the wrong time.
+     * <p>Call once per {@code robotPeriodic()} loop, AFTER
+     * {@code CommandScheduler.getInstance().run()} so command and vision state is current.
      *
-     * <p><b>Priority order (first match wins):</b>
+     * <p><b>Priority (first match wins):</b>
      * <ol>
-     *   <li>DEPLOY       — first 2 s after code boots (solid white)</li>
-     *   <li>GYRO_FAULT   — NavX disconnected, all robot modes (flashing red-orange)</li>
-     *   <li>DISABLED     — robot disabled / e-stopped (solid red)</li>
-     *   <li>AUTO         — autonomous period (solid orange)</li>
-     *   <li>TEST         — Driver Station test mode (solid purple)</li>
-     *   <li>MATCH_END    — ≤ 10 s remaining (flashing white)</li>
-     *   <li>ENDGAME      — ≤ 30 s remaining (flashing yellow)</li>
-     *   <li>AUTO_ASSIST  — navigation command running (solid blue)</li>
-     *   <li>POSE_VALID   — vision locked on tag (distance gradient or flashing lime)</li>
-     *   <li>INTAKE       — intake motor running (solid orange)</li>
-     *   <li>SHIFT_ON/OFF — 25-second shooting-window cycle (cyan / dark-blue)</li>
-     *   <li>TELEOP       — driver in full control, default (solid green)</li>
+     *   <li>DEPLOY            — first 2 s after boot</li>
+     *   <li>GYRO_FAULT        — NavX disconnected (all modes)</li>
+     *   <li>(disabled)        — strip off</li>
+     *   <li>AUTO              — autonomous</li>
+     *   <li>TEST              — test mode</li>
+     *   <li>MATCH_END         — ≤ 10 s left</li>
+     *   <li>ENDGAME           — ≤ 30 s left</li>
+     *   <li>SHIFT_ON/OFF_WARNING — our hub opens/closes within kShiftWarningSeconds</li>
+     *   <li>POSE_VALID        — vision lock (distance gradient)</li>
+     *   <li>INTAKE / SHOOTER  — mechanisms running (both → purple edges, orange middle)</li>
+     *   <li>TELEOP            — default</li>
      * </ol>
      */
     public void updateLEDState() {
+        led.setOutputEnabled(true);
 
-        // ── 1. Deploy animation ───────────────────────────────────────────────
-        // isDeployAnimationPlaying() permanently returns false after 2 s.
-        // Return early so no other state can override the deploy confirmation.
+        // 1. Deploy confirmation.
         if (led.isDeployAnimationPlaying()) {
             led.setState(LED.State.DEPLOY);
             return;
         }
 
-        // ── 2. Gyro fault ─────────────────────────────────────────────────────
-        // Check in EVERY mode — including disabled — so the fault is visible in
-        // the pit before the match if a NavX cable came loose.
+        // 2. Gyro fault — visible in every mode, including disabled (pit check).
         if (!robotDrive.gyro.isConnected()) {
             led.setState(LED.State.GYRO_FAULT);
-            led.setDistanceToTarget(-1); // clear any stale distance data
             return;
         }
 
-        // ── 3. Robot mode checks ──────────────────────────────────────────────
+        // 3. Disabled → strip off (there is no DISABLED state).
         if (DriverStation.isDisabled()) {
-            led.setState(LED.State.DISABLED);
+            led.setOutputEnabled(false);
             return;
         }
 
-        if (DriverStation.isAutonomous()) {
-            led.setState(LED.State.AUTO);
-            return;
-        }
+        // 4. Mode.
+        if (DriverStation.isAutonomous()) { led.setState(LED.State.AUTO); return; }
+        if (DriverStation.isTest())       { led.setState(LED.State.TEST); return; }
 
-        if (DriverStation.isTest()) {
-            led.setState(LED.State.TEST);
-            return;
-        }
+        // 5. Teleop timing. getMatchTime() counts down from 140; < 0 means no timer.
+        double t = DriverStation.getMatchTime();
+        if (t >= 0 && t <= 10.0) { led.setState(LED.State.MATCH_END); return; }
+        if (t >= 0 && t <= 30.0) { led.setState(LED.State.ENDGAME);   return; }
 
-        // ── 4. Teleop priority chain ──────────────────────────────────────────
-        // All checks below only run during teleop.
+        // 6. Hub shift warning (needs match time + game data 'R'/'B' from the field).
+        if (t >= 0) {
+            boolean isRed = DriverStation.getAlliance()
+                    .map(a -> a == DriverStation.Alliance.Red)
+                    .orElse(false);
+            HubSchedule.Status hub = HubSchedule.compute(
+                    t,
+                    DriverStation.getGameSpecificMessage(),  // alliance that goes inactive FIRST
+                    isRed,
+                    LEDConstants.kShiftWarningSeconds);
 
-        // getMatchTime() counts down from the start of the period.
-        // Returns -1 when FMS is not connected (practice / pit mode).
-        double matchTime = DriverStation.getMatchTime();
-
-        // 4a. Match end warning — ≤ 10 s left (most urgent timing cue).
-        if (matchTime >= 0 && matchTime <= 10.0) {
-            led.setState(LED.State.MATCH_END);
-            led.setDistanceToTarget(-1);
-            return;
-        }
-
-        // 4b. Endgame warning — ≤ 30 s left (start climbing now).
-        if (matchTime >= 0 && matchTime <= 30.0) {
-            led.setState(LED.State.ENDGAME);
-            led.setDistanceToTarget(-1);
-            return;
-        }
-
-        // 4c. Auto-assist detection.
-        // SubsystemBase.getCurrentCommand() returns the TeleopDriveCommand while the
-        // driver is in full control.  Any other command means an assist is active
-        // (GoToPositionCommand, FacePointCommand, AlignToAprilTagCommand, etc.).
-        Command currentDriveCmd = robotDrive.getCurrentCommand();
-        boolean autoAssistActive = currentDriveCmd != null
-                && !(currentDriveCmd instanceof TeleopDriveCommand);
-
-        if (autoAssistActive) {
-            led.setState(LED.State.AUTO_ASSIST);
-            led.setDistanceToTarget(-1);
-            return;
-        }
-
-        // 4d. Vision target lock.
-        // hasValidPose() is true only when at least one camera produced a fresh,
-        // low-ambiguity pose estimate THIS cycle (reset to false every periodic).
-        if (vision.hasValidPose()) {
-            led.setState(LED.State.POSE_VALID);
-            led.setDistanceToTarget(getNearestTagDistance());
-            return;
-        }
-
-        // No vision lock — clear stale distance data so POSE_VALID doesn't show
-        // an outdated color if vision momentarily drops and comes back.
-        led.setDistanceToTarget(-1);
-
-        // 4e. Intake active — motor commanded above the deadband.
-        if (ballIntake.isRunning()) {
-            led.setState(LED.State.INTAKE);
-            return;
-        }
-
-        // 4f. Shooting-window shift indicator.
-        // Divides teleop into 25-second alternating ON / OFF windows counted from the
-        // start of the period.  Only shown when the match timer is available (FMS up).
-        //
-        // Example timeline (blue-alliance perspective):
-        //   Elapsed  0– 25 s → window 0 → SHIFT_ON  (cyan)      — shoot
-        //   Elapsed 25– 50 s → window 1 → SHIFT_OFF (dark-blue) — don't shoot
-        //   Elapsed 50– 75 s → window 2 → SHIFT_ON  (cyan)      — shoot
-        //   …
-        if (matchTime >= 0) {
-            double elapsed       = kTeleopDuration - matchTime;
-            int    shiftIndex    = (int)(elapsed / kShiftDuration);
-            double timeIntoShift = elapsed - (shiftIndex * kShiftDuration);
-            double timeLeftInShift = kShiftDuration - timeIntoShift;
-            boolean shiftOn      = (shiftIndex % 2 == 0);
-
-            if (timeLeftInShift <= LEDConstants.kShiftWarningSeconds) {
-                // Warning: about to flip — flash the NEXT window's color
-                led.setState(shiftOn ? LED.State.SHIFT_OFF_WARNING : LED.State.SHIFT_ON_WARNING);
-            } else {
-                led.setState(shiftOn ? LED.State.SHIFT_ON : LED.State.SHIFT_OFF);
+            if (hub.known() && hub.changingSoon()) {
+                // Currently active → about to close; currently inactive → about to open.
+                led.setState(hub.active() ? LED.State.SHIFT_OFF_WARNING
+                                          : LED.State.SHIFT_ON_WARNING);
+                return;
             }
+        }
+
+        // 7. Vision lock (distance expires automatically if we stop calling this).
+        if (vision.hasValidPose()) {
+            led.setDistanceToTarget(getNearestTagDistance());
+            led.setState(LED.State.POSE_VALID);
             return;
         }
 
-        // 4g. Default fallback — driver in full control, no match timer, all nominal.
+        // 8. Intake / shooter (both → purple edges + orange middle, handled in LED).
+        boolean intakeRunning  = ballIntake.isRunning();
+        boolean shooterRunning = false;  // TODO: shooter.isRunning() once the subsystem exists
+        if (intakeRunning || shooterRunning) {
+            led.setMechanisms(intakeRunning, shooterRunning);
+            led.setState(intakeRunning ? LED.State.INTAKE : LED.State.SHOOTER);
+            return;
+        }
+
+        // 9. Default.
         led.setState(LED.State.TELEOP);
     }
 

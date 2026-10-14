@@ -277,23 +277,24 @@ public final class Constants {
         public static final int kLength = 300;
 
         /**
-         * Flash toggle interval in seconds (0.25 s = 4 Hz).
-         * Controls all flashing states: GYRO_FAULT, ENDGAME, MATCH_END, POSE_VALID fallback.
+         * FULL on+off flash cycle in seconds (0.25 s = 4 Hz).
+         * Controls every flashing state.
          */
         public static final double kFlashPeriod = 0.25;
+
+        /** Seconds before our hub opens/closes to start the warning flash. */
         public static final double kShiftWarningSeconds = 3.0;
 
-        /**
-         * Distance (metres) at which the POSE_VALID distance-gradient shows solid red.
-         * Matches {@link VisionConstants#kMaxTargetDistance} so the gradient covers
-         * exactly the range over which vision pose estimates are trusted.
-         */
+        /** Intake + shooter together: this fraction at each END of the strip is purple. */
+        public static final double kIntakeEdgeFraction = 0.30;
+
+        /** Vision distance older than this is ignored (falls back to flashing lime). */
+        public static final double kDistanceTimeoutSeconds = 0.25;
+
+        /** Distance (m) at which the POSE_VALID gradient shows solid red. */
         public static final double kDistanceFarMeters   = 3.0;
 
-        /**
-         * Distance (metres) at which the POSE_VALID distance-gradient shows solid green.
-         * Below this threshold the robot is considered "close" to the target.
-         */
+        /** Distance (m) at which the POSE_VALID gradient shows solid green. */
         public static final double kDistanceCloseMeters = 0.5;
     }
 
