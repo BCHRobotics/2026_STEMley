@@ -205,7 +205,7 @@ public class Shooter extends SubsystemBase {
         // CHANGE #2: All three followers are inverted relative to the leader.
         // Confirm the physical motor mounting agrees with this direction before running.
         configureFollower(shooter2Config, true);
-        configureFollower(shooter3Config, true);
+        configureFollower(shooter3Config, false);
         configureFollower(shooter4Config, true);
 
         feederMotor.configure(

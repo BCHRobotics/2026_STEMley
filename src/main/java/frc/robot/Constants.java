@@ -343,5 +343,8 @@ public final class Constants {
     // CHANGE #1: One NEO Vortex shooter; CAN 22 leads CAN 23, 24 and 25.
     public static final int SHOOTER3_CAN_ID = 24;
     public static final int SHOOTER4_CAN_ID = 25;
+
+    //22 and 24 CAN is on shooter right camera side
+    //125 inches - 2700 rpm everyting goes in 
   }
 }
