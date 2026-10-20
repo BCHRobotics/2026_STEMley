@@ -1,0 +1,534 @@
+{
+  "version": 1,
+  "grid_size": 32,
+  "tabs": [
+    {
+      "name": "Shooter Tuning",
+      "grid_layout": {
+        "layouts": [],
+        "containers": [
+          {
+            "title": "RUN - flywheel only",
+            "type": "Command",
+            "x": 0.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 96.0,
+            "properties": {
+              "topic": "/SmartDashboard/Shooter/Tuning/Run Flywheel",
+              "period": 0.05,
+              "show_type": false,
+              "maximize_button_space": true
+            }
+          },
+          {
+            "title": "STOP - coast down",
+            "type": "Command",
+            "x": 256.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 96.0,
+            "properties": {
+              "topic": "/SmartDashboard/Shooter/Tuning/Stop Flywheel",
+              "period": 0.05,
+              "show_type": false,
+              "maximize_button_space": true
+            }
+          },
+          {
+            "title": "Shoot request",
+            "type": "Boolean Box",
+            "x": 512.0,
+            "y": 0.0,
+            "width": 128.0,
+            "height": 96.0,
+            "properties": {
+              "topic": "/SmartDashboard/Shooter/Active",
+              "period": 0.05,
+              "data_type": "boolean",
+              "true_color": 4283215696,
+              "false_color": 4294198070,
+              "true_icon": "None",
+              "false_icon": "None"
+            }
+          },
+          {
+            "title": "RPM ready",
+            "type": "Boolean Box",
+            "x": 640.0,
+            "y": 0.0,
+            "width": 128.0,
+            "height": 96.0,
+            "properties": {
+              "topic": "/SmartDashboard/Shooter/Charged",
+              "period": 0.05,
+              "data_type": "boolean",
+              "true_color": 4283215696,
+              "false_color": 4294198070,
+              "true_icon": "None",
+              "false_icon": "None"
+            }
+          },
+          {
+            "title": "Target RPM",
+            "type": "Large Text Display",
+            "x": 768.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 96.0,
+            "properties": {
+              "topic": "/SmartDashboard/Shooter/TargetRPM",
+              "period": 0.05,
+              "data_type": "double"
+            }
+          },
+          {
+            "title": "Leader RPM",
+            "type": "Large Text Display",
+            "x": 1024.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 96.0,
+            "properties": {
+              "topic": "/SmartDashboard/Shooter/Shooter1RPM",
+              "period": 0.05,
+              "data_type": "double"
+            }
+          },
+          {
+            "title": "F - velocity feedforward",
+            "type": "Text Display",
+            "x": 0.0,
+            "y": 96.0,
+            "width": 256.0,
+            "height": 96.0,
+            "properties": {
+              "topic": "/SmartDashboard/Shooter/Tuning/F",
+              "period": 0.05,
+              "data_type": "double",
+              "show_submit_button": true
+            }
+          },
+          {
+            "title": "P - proportional",
+            "type": "Text Display",
+            "x": 256.0,
+            "y": 96.0,
+            "width": 256.0,
+            "height": 96.0,
+            "properties": {
+              "topic": "/SmartDashboard/Shooter/Tuning/P",
+              "period": 0.05,
+              "data_type": "double",
+              "show_submit_button": true
+            }
+          },
+          {
+            "title": "I - integral",
+            "type": "Text Display",
+            "x": 0.0,
+            "y": 192.0,
+            "width": 256.0,
+            "height": 96.0,
+            "properties": {
+              "topic": "/SmartDashboard/Shooter/Tuning/I",
+              "period": 0.05,
+              "data_type": "double",
+              "show_submit_button": true
+            }
+          },
+          {
+            "title": "D - derivative",
+            "type": "Text Display",
+            "x": 256.0,
+            "y": 192.0,
+            "width": 256.0,
+            "height": 96.0,
+            "properties": {
+              "topic": "/SmartDashboard/Shooter/Tuning/D",
+              "period": 0.05,
+              "data_type": "double",
+              "show_submit_button": true
+            }
+          },
+          {
+            "title": "Max output [0..1]",
+            "type": "Text Display",
+            "x": 0.0,
+            "y": 288.0,
+            "width": 256.0,
+            "height": 96.0,
+            "properties": {
+              "topic": "/SmartDashboard/Shooter/Tuning/MaxOutput",
+              "period": 0.05,
+              "data_type": "double",
+              "show_submit_button": true
+            }
+          },
+          {
+            "title": "Ready threshold [RPM]",
+            "type": "Text Display",
+            "x": 256.0,
+            "y": 288.0,
+            "width": 256.0,
+            "height": 96.0,
+            "properties": {
+              "topic": "/SmartDashboard/Shooter/Tuning/ReadyRPM",
+              "period": 0.05,
+              "data_type": "double",
+              "show_submit_button": true
+            }
+          },
+          {
+            "title": "Feeder speed [0..1]",
+            "type": "Text Display",
+            "x": 0.0,
+            "y": 384.0,
+            "width": 256.0,
+            "height": 96.0,
+            "properties": {
+              "topic": "/SmartDashboard/Shooter/Tuning/FeederSpeed",
+              "period": 0.05,
+              "data_type": "double",
+              "show_submit_button": true
+            }
+          },
+          {
+            "title": "Fixed test target [RPM]",
+            "type": "Text Display",
+            "x": 256.0,
+            "y": 384.0,
+            "width": 256.0,
+            "height": 96.0,
+            "properties": {
+              "topic": "/SmartDashboard/Shooter/Tuning/TestRPM",
+              "period": 0.05,
+              "data_type": "double",
+              "show_submit_button": true
+            }
+          },
+          {
+            "title": "Distance target ON / fixed RPM OFF",
+            "type": "Toggle Switch",
+            "x": 0.0,
+            "y": 480.0,
+            "width": 512.0,
+            "height": 128.0,
+            "properties": {
+              "topic": "/SmartDashboard/Shooter/Tuning/UseDistanceForTargetRPM",
+              "period": 0.05,
+              "data_type": "boolean"
+            }
+          },
+          {
+            "title": "Leader RPM - 10 s",
+            "type": "Graph",
+            "x": 512.0,
+            "y": 96.0,
+            "width": 384.0,
+            "height": 256.0,
+            "properties": {
+              "topic": "/SmartDashboard/Shooter/Shooter1RPM",
+              "period": 0.05,
+              "data_type": "double",
+              "time_displayed": 10.0,
+              "color": 4278238420,
+              "line_width": 2.0
+            }
+          },
+          {
+            "title": "Target RPM - 10 s",
+            "type": "Graph",
+            "x": 896.0,
+            "y": 96.0,
+            "width": 384.0,
+            "height": 256.0,
+            "properties": {
+              "topic": "/SmartDashboard/Shooter/TargetRPM",
+              "period": 0.05,
+              "data_type": "double",
+              "time_displayed": 10.0,
+              "color": 4294951175,
+              "line_width": 2.0
+            }
+          },
+          {
+            "title": "RPM error = actual - target",
+            "type": "Graph",
+            "x": 512.0,
+            "y": 352.0,
+            "width": 768.0,
+            "height": 256.0,
+            "properties": {
+              "topic": "/AdvantageKit/RealOutputs/Shooter/RPMError",
+              "period": 0.05,
+              "data_type": "double",
+              "time_displayed": 10.0,
+              "color": 4293874512,
+              "line_width": 2.0
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "Motor Health",
+      "grid_layout": {
+        "layouts": [],
+        "containers": [
+          {
+            "title": "STOP - coast down",
+            "type": "Command",
+            "x": 0.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 96.0,
+            "properties": {
+              "topic": "/SmartDashboard/Shooter/Tuning/Stop Flywheel",
+              "period": 0.05,
+              "show_type": false,
+              "maximize_button_space": true
+            }
+          },
+          {
+            "title": "Motor 1 RPM (CAN 22)",
+            "type": "Large Text Display",
+            "x": 256.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 96.0,
+            "properties": {
+              "topic": "/SmartDashboard/Shooter/Shooter1RPM",
+              "period": 0.05,
+              "data_type": "double"
+            }
+          },
+          {
+            "title": "Motor 2 RPM (CAN 23)",
+            "type": "Large Text Display",
+            "x": 512.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 96.0,
+            "properties": {
+              "topic": "/SmartDashboard/Shooter/Shooter2RPM",
+              "period": 0.05,
+              "data_type": "double"
+            }
+          },
+          {
+            "title": "Motor 3 RPM (CAN 24)",
+            "type": "Large Text Display",
+            "x": 768.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 96.0,
+            "properties": {
+              "topic": "/SmartDashboard/Shooter/Shooter3RPM",
+              "period": 0.05,
+              "data_type": "double"
+            }
+          },
+          {
+            "title": "Motor 4 RPM (CAN 25)",
+            "type": "Large Text Display",
+            "x": 1024.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 96.0,
+            "properties": {
+              "topic": "/SmartDashboard/Shooter/Shooter4RPM",
+              "period": 0.05,
+              "data_type": "double"
+            }
+          },
+          {
+            "title": "Motor 1 current [A]",
+            "type": "Large Text Display",
+            "x": 0.0,
+            "y": 96.0,
+            "width": 256.0,
+            "height": 128.0,
+            "properties": {
+              "topic": "/AdvantageKit/RealOutputs/Shooter/Motor1CurrentAmps",
+              "period": 0.05,
+              "data_type": "double"
+            }
+          },
+          {
+            "title": "Motor 2 current [A]",
+            "type": "Large Text Display",
+            "x": 256.0,
+            "y": 96.0,
+            "width": 256.0,
+            "height": 128.0,
+            "properties": {
+              "topic": "/AdvantageKit/RealOutputs/Shooter/Motor2CurrentAmps",
+              "period": 0.05,
+              "data_type": "double"
+            }
+          },
+          {
+            "title": "Motor 3 current [A]",
+            "type": "Large Text Display",
+            "x": 512.0,
+            "y": 96.0,
+            "width": 256.0,
+            "height": 128.0,
+            "properties": {
+              "topic": "/AdvantageKit/RealOutputs/Shooter/Motor3CurrentAmps",
+              "period": 0.05,
+              "data_type": "double"
+            }
+          },
+          {
+            "title": "Motor 4 current [A]",
+            "type": "Large Text Display",
+            "x": 768.0,
+            "y": 96.0,
+            "width": 256.0,
+            "height": 128.0,
+            "properties": {
+              "topic": "/AdvantageKit/RealOutputs/Shooter/Motor4CurrentAmps",
+              "period": 0.05,
+              "data_type": "double"
+            }
+          },
+          {
+            "title": "Feeder current [A]",
+            "type": "Large Text Display",
+            "x": 1024.0,
+            "y": 96.0,
+            "width": 256.0,
+            "height": 128.0,
+            "properties": {
+              "topic": "/AdvantageKit/RealOutputs/Shooter/FeederCurrentAmps",
+              "period": 0.05,
+              "data_type": "double"
+            }
+          },
+          {
+            "title": "Motor 1 RPM - signed",
+            "type": "Graph",
+            "x": 0.0,
+            "y": 224.0,
+            "width": 320.0,
+            "height": 256.0,
+            "properties": {
+              "topic": "/SmartDashboard/Shooter/Shooter1RPM",
+              "period": 0.05,
+              "data_type": "double",
+              "time_displayed": 10.0,
+              "color": 4278238420,
+              "line_width": 2.0
+            }
+          },
+          {
+            "title": "Motor 2 RPM - signed",
+            "type": "Graph",
+            "x": 320.0,
+            "y": 224.0,
+            "width": 320.0,
+            "height": 256.0,
+            "properties": {
+              "topic": "/SmartDashboard/Shooter/Shooter2RPM",
+              "period": 0.05,
+              "data_type": "double",
+              "time_displayed": 10.0,
+              "color": 4294951175,
+              "line_width": 2.0
+            }
+          },
+          {
+            "title": "Motor 3 RPM - signed",
+            "type": "Graph",
+            "x": 640.0,
+            "y": 224.0,
+            "width": 320.0,
+            "height": 256.0,
+            "properties": {
+              "topic": "/SmartDashboard/Shooter/Shooter3RPM",
+              "period": 0.05,
+              "data_type": "double",
+              "time_displayed": 10.0,
+              "color": 4289415100,
+              "line_width": 2.0
+            }
+          },
+          {
+            "title": "Motor 4 RPM - signed",
+            "type": "Graph",
+            "x": 960.0,
+            "y": 224.0,
+            "width": 320.0,
+            "height": 256.0,
+            "properties": {
+              "topic": "/SmartDashboard/Shooter/Shooter4RPM",
+              "period": 0.05,
+              "data_type": "double",
+              "time_displayed": 10.0,
+              "color": 4284922730,
+              "line_width": 2.0
+            }
+          },
+          {
+            "title": "Hub distance [m]",
+            "type": "Large Text Display",
+            "x": 0.0,
+            "y": 480.0,
+            "width": 320.0,
+            "height": 128.0,
+            "properties": {
+              "topic": "/SmartDashboard/Shooter/Distance",
+              "period": 0.05,
+              "data_type": "double"
+            }
+          },
+          {
+            "title": "Ready threshold [RPM]",
+            "type": "Large Text Display",
+            "x": 320.0,
+            "y": 480.0,
+            "width": 320.0,
+            "height": 128.0,
+            "properties": {
+              "topic": "/SmartDashboard/Shooter/ReadyRPM",
+              "period": 0.05,
+              "data_type": "double"
+            }
+          },
+          {
+            "title": "Feeder request (not output)",
+            "type": "Large Text Display",
+            "x": 640.0,
+            "y": 480.0,
+            "width": 320.0,
+            "height": 128.0,
+            "properties": {
+              "topic": "/SmartDashboard/Shooter/AppliedFeederSpeed",
+              "period": 0.05,
+              "data_type": "double"
+            }
+          },
+          {
+            "title": "Vortex mode active",
+            "type": "Boolean Box",
+            "x": 960.0,
+            "y": 480.0,
+            "width": 320.0,
+            "height": 128.0,
+            "properties": {
+              "topic": "/SmartDashboard/Shooter/VortexSpeedShotActive",
+              "period": 0.05,
+              "data_type": "boolean",
+              "true_color": 4283215696,
+              "false_color": 4294198070,
+              "true_icon": "None",
+              "false_icon": "None"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
