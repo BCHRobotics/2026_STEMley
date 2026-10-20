@@ -19,11 +19,21 @@ All tuning keys live under `Shooter/Tuning/`.
 | `TestRPM` | double | `1500` | Fixed setpoint used for PID tuning |
 | `UseDistanceForTargetRPM` | boolean | `true` | When false, uses `TestRPM` instead of hub-distance interpolation |
 | `Run Flywheel` | command | - | Spins the flywheel at the active setpoint (no feeding) |
-| `Stop Flywheel` | command | - | Stops the flywheel and feeder |
+| `Stop Flywheel` | command | - | Removes flywheel and feeder power; flywheel coasts down |
 
 PIDF and `MaxOutput` changes are pushed to the SPARK Flex closed-loop config only
 when a value changes, using `kNoPersistParameters` to avoid flash wear. Gains are
 not persisted on the motor controller.
+
+## Motor configuration and stop behaviour
+
+This tuning tree incorporates commit `6b69fe3` from
+`feature/single-shooter-four-vortex`: CAN 22 leads three inverted followers on
+CAN 23/24/25, with the feeder on CAN 21. Verify physical directions before use.
+Stop clears all shooter/feeder requests and removes motor power; there is no
+powered idle RPM. Disable also clears the latched dashboard run request, so
+re-enable alone does not resume it. A new shoot command can start it again.
+The spinning flywheel still takes time to coast down.
 
 ## Tuning Workflow
 
