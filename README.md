@@ -192,6 +192,7 @@ Additional documentation in `docs/`:
 - `docs/CameraTransform.md`
 - `docs/APRILTAG_FIELD_LAYOUT.md`
 - `docs/intake_commissioning_guide.md`
+- `docs/shooter_pid_tuning.md`
 - `docs/ClimberFlowDiagram.md`
 - `docs/joystick controls.md`
 - `docs/SHUFFLEBOARD_ITEMS.md`

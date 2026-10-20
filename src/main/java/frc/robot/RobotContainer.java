@@ -173,6 +173,19 @@ public class RobotContainer {
         SmartDashboard.putData(
             "Intake Hold Retract",
             new HoldBallIntakeExtendCommand(m_ballIntake, -1.0, this::isIntakeOverrideCalibrationAndLimitsEnabled));
+
+        // Shooter PID tuning: spin the flywheel at the active setpoint without
+        // feeding. The run command ends immediately; the shooter keeps spinning
+        // until "Stop Flywheel" or a normal shoot command ends it.
+        SmartDashboard.putData(
+            "Shooter/Tuning/Run Flywheel",
+            Commands.runOnce(m_shooter::startShooter, m_shooter));
+        SmartDashboard.putData(
+            "Shooter/Tuning/Stop Flywheel",
+            Commands.runOnce(() -> {
+                m_shooter.stopShooter();
+                m_shooter.stopFeeder();
+            }, m_shooter));
     }
 
     private boolean isIntakeOverrideCalibrationAndLimitsEnabled() {

@@ -2,6 +2,7 @@
 // ----------------------
 //  • Always tune feedforward before feedback (F before P before D before I).
 //  • Use SmartDashboard live-tuning (updateTunables) — no redeploy required.
+//    Keys live under "Shooter/Tuning/*" and apply on change.
 //  • Keep maxOutput ≤ 0.85 until gains are stable to protect the mechanism.
 //  • Once gains are finalized, change PersistMode to kPersistParameters and
 //    commit the constants in code so they survive a power cycle.
@@ -26,6 +27,7 @@ import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.VortexMotorConstants;
 
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -51,6 +53,18 @@ public class Shooter extends SubsystemBase {
     private static final double VORTEX_SPEED_SHOT_TARGET_RPM = VortexMotorConstants.kFreeSpeedRpm * 0.95;
     private static final double VORTEX_SPEED_SHOT_READY_RPM = VORTEX_SPEED_SHOT_TARGET_RPM * 0.50;
 
+    // Live-tunable values, exposed through Elastic/SmartDashboard. These start at
+    // the ShooterConstants defaults and are refreshed every loop while tuning.
+    private static final String TUNING_PREFIX = "Shooter/Tuning/";
+    private double kP;
+    private double kI;
+    private double kD;
+    private double kF;
+    private double maxOutput;
+    private double readyRpm;
+    private double feederSpeed;
+    private double targetRpm;
+
     private boolean isShooterActive  = false;
     private boolean isVortexSpeedShotActive = false;
     private boolean isFeederReversed = false;
@@ -66,30 +80,52 @@ public class Shooter extends SubsystemBase {
 
         flywheelController1 = shooterMotor1.getClosedLoopController();
 
-        publishTunables();
-        publishTelemetry();
+        loadTuningDefaults();
+        publishTuningDefaults();
 
         configureMotors();
+        publishTelemetry();
     }
 
-    private void publishTunables() {
-        // SmartDashboard.putNumber("Shooter/Motor1/F", ShooterConstants.kF1);
-        // SmartDashboard.putNumber("Shooter/Motor1/P", ShooterConstants.kP1);
-        // SmartDashboard.putNumber("Shooter/Motor1/I", ShooterConstants.kI1);
-        // SmartDashboard.putNumber("Shooter/Motor1/D", ShooterConstants.kD1);
-        // SmartDashboard.putNumber("Shooter/Motor2/F", ShooterConstants.kF2);
-        // SmartDashboard.putNumber("Shooter/Motor2/P", ShooterConstants.kP2);
-        // SmartDashboard.putNumber("Shooter/Motor2/I", ShooterConstants.kI2);
-        // SmartDashboard.putNumber("Shooter/Motor2/D", ShooterConstants.kD2);
-        // SmartDashboard.putNumber("Shooter/MaxOutput", ShooterConstants.maxOutput);
-        // SmartDashboard.putNumber("Shooter/ReadyRPM", ShooterConstants.readyRpm);
-        // SmartDashboard.putNumber("Shooter/FeederSpeed", ShooterConstants.feederSpeed);
+    private void loadTuningDefaults() {
+        kP = ShooterConstants.kP1;
+        kI = ShooterConstants.kI1;
+        kD = ShooterConstants.kD1;
+        kF = ShooterConstants.kF1;
+        maxOutput = ShooterConstants.maxOutput;
+        readyRpm = ShooterConstants.readyRpm;
+        feederSpeed = ShooterConstants.feederSpeed;
+        targetRpm = ShooterConstants.targetRpm;
+    }
+
+    /**
+     * Publishes the tuning defaults once. setDefault* only writes the value if the
+     * key is missing, so the periodic loop never overwrites values typed into
+     * Elastic. The keys are marked persistent so the last values survive a robot
+     * restart (stored in networktables.json on the roboRIO).
+     */
+    private void publishTuningDefaults() {
+        publishDefaultNumber("P", kP);
+        publishDefaultNumber("I", kI);
+        publishDefaultNumber("D", kD);
+        publishDefaultNumber("F", kF);
+        publishDefaultNumber("MaxOutput", maxOutput);
+        publishDefaultNumber("ReadyRPM", readyRpm);
+        publishDefaultNumber("FeederSpeed", feederSpeed);
+        publishDefaultNumber("TestRPM", targetRpm);
+        SmartDashboard.setDefaultBoolean(TUNING_PREFIX + "UseDistanceForTargetRPM", true);
+        SmartDashboard.setPersistent(TUNING_PREFIX + "UseDistanceForTargetRPM");
+    }
+
+    private void publishDefaultNumber(String name, double defaultValue) {
+        SmartDashboard.setDefaultNumber(TUNING_PREFIX + name, defaultValue);
+        SmartDashboard.setPersistent(TUNING_PREFIX + name);
     }
 
     private void publishTelemetry() {
         SmartDashboard.putNumber("Shooter/Distance", getHubDistance());
-        SmartDashboard.putNumber("Shooter/TargetRPM", ShooterConstants.targetRpm);
-        SmartDashboard.putNumber("Shooter/ReadyRPM", ShooterConstants.readyRpm);
+        SmartDashboard.putNumber("Shooter/TargetRPM", targetRpm);
+        SmartDashboard.putNumber("Shooter/ReadyRPM", readyRpm);
         SmartDashboard.putNumber("Shooter/Shooter1RPM", shooterMotor1.getEncoder().getVelocity());
         SmartDashboard.putNumber("Shooter/Shooter2RPM", shooterMotor2.getEncoder().getVelocity());
         SmartDashboard.putNumber("Shooter/AppliedFeederSpeed", currentFeederSpeed);
@@ -97,8 +133,8 @@ public class Shooter extends SubsystemBase {
         SmartDashboard.putBoolean("Shooter/VortexSpeedShotReady", isVortexSpeedShotReady());
 
         Logger.recordOutput("Shooter/Distance", getHubDistance());
-        Logger.recordOutput("Shooter/TargetRPM", ShooterConstants.targetRpm);
-        Logger.recordOutput("Shooter/ReadyRPM", ShooterConstants.readyRpm);
+        Logger.recordOutput("Shooter/TargetRPM", targetRpm);
+        Logger.recordOutput("Shooter/ReadyRPM", readyRpm);
         Logger.recordOutput("Shooter/Shooter1RPM", shooterMotor1.getEncoder().getVelocity());
         Logger.recordOutput("Shooter/Shooter2RPM", shooterMotor2.getEncoder().getVelocity());
         Logger.recordOutput("Shooter/AppliedFeederSpeed", currentFeederSpeed);
@@ -109,7 +145,12 @@ public class Shooter extends SubsystemBase {
         Logger.recordOutput("Shooter/Motor1CurrentAmps", shooterMotor1.getOutputCurrent());
         Logger.recordOutput("Shooter/Motor2CurrentAmps", shooterMotor2.getOutputCurrent());
         Logger.recordOutput("Shooter/FeederCurrentAmps", feederMotor.getOutputCurrent());
-        Logger.recordOutput("Shooter/RPMError", shooterMotor1.getEncoder().getVelocity() - ShooterConstants.targetRpm);
+        Logger.recordOutput("Shooter/RPMError", shooterMotor1.getEncoder().getVelocity() - targetRpm);
+        Logger.recordOutput("Shooter/Tuning/P", kP);
+        Logger.recordOutput("Shooter/Tuning/I", kI);
+        Logger.recordOutput("Shooter/Tuning/D", kD);
+        Logger.recordOutput("Shooter/Tuning/F", kF);
+        Logger.recordOutput("Shooter/Tuning/MaxOutput", maxOutput);
     }
 
     private void applyClosedLoopConfig(SparkFlexConfig config, double p, double i, double d, double f) {
@@ -118,7 +159,7 @@ public class Shooter extends SubsystemBase {
             .p(p)
             .i(i)
             .d(d)
-            .outputRange(0, ShooterConstants.maxOutput);
+            .outputRange(0, maxOutput);
 
         config.closedLoop.feedForward.kV(f);
     }
@@ -141,10 +182,10 @@ public class Shooter extends SubsystemBase {
 
         applyClosedLoopConfig(
             shooter1Config,
-            ShooterConstants.kP1,
-            ShooterConstants.kI1,
-            ShooterConstants.kD1,
-            ShooterConstants.kF1);
+            kP,
+            kI,
+            kD,
+            kF);
 
         // follow(id, inverted=true) → spins opposite direction to motor1,
         // which physically makes both wheels shoot in the same direction.
@@ -174,9 +215,9 @@ public class Shooter extends SubsystemBase {
     /** @return true when the flywheel has reached the ready RPM threshold */
     public boolean isCharged() {
         double currentVelocity1 = shooterMotor1.getEncoder().getVelocity();
-        double allowedError = Math.abs(ShooterConstants.targetRpm - ShooterConstants.readyRpm);
+        double allowedError = Math.abs(targetRpm - readyRpm);
 
-        Boolean isCharged1 = Math.abs(currentVelocity1 - ShooterConstants.targetRpm) <= allowedError;
+        Boolean isCharged1 = Math.abs(currentVelocity1 - targetRpm) <= allowedError;
         return isCharged1;
 
     }
@@ -236,11 +277,11 @@ public class Shooter extends SubsystemBase {
 
     /** Runs the feeder belt at {@link #feederSpeed} */
     public void startFeeder() {
-        currentFeederSpeed = ShooterConstants.feederSpeed;
+        currentFeederSpeed = feederSpeed;
     }
 
     public void toggleReverseFeeder() {
-        currentFeederSpeed = -ShooterConstants.feederSpeed;
+        currentFeederSpeed = -feederSpeed;
     }
 
     /**
@@ -301,7 +342,6 @@ public class Shooter extends SubsystemBase {
     public void periodic() {
         updateTunables();
         updateMotors();
-        publishTunables();
         publishTelemetry();
 
         // Publish telemetry to SmartDashboard / Shuffleboard
@@ -311,38 +351,36 @@ public class Shooter extends SubsystemBase {
     }
 
     private void updateTunables() {
-        double motor1F = SmartDashboard.getNumber("Shooter/Motor1/F", ShooterConstants.kF1);
-        double motor1P = SmartDashboard.getNumber("Shooter/Motor1/P", ShooterConstants.kP1);
-        double motor1I = SmartDashboard.getNumber("Shooter/Motor1/I", ShooterConstants.kI1);
-        double motor1D = SmartDashboard.getNumber("Shooter/Motor1/D", ShooterConstants.kD1);
-        double max = SmartDashboard.getNumber("Shooter/MaxOutput", ShooterConstants.maxOutput);
-        double readyRpm = SmartDashboard.getNumber("Shooter/ReadyRPM", ShooterConstants.readyRpm);
-        double feederSpeed = SmartDashboard.getNumber("Shooter/FeederSpeed", ShooterConstants.feederSpeed);
+        double newF = Math.max(0.0, getTunable("F", kF));
+        double newP = Math.max(0.0, getTunable("P", kP));
+        double newI = Math.max(0.0, getTunable("I", kI));
+        double newD = Math.max(0.0, getTunable("D", kD));
+        double newMaxOutput = MathUtil.clamp(getTunable("MaxOutput", maxOutput), 0.0, 1.0);
 
-        double hubdistance = getHubDistance();
-        ShooterConstants.targetRpm = calculateRpmFromDistance(hubdistance);
+        feederSpeed = MathUtil.clamp(getTunable("FeederSpeed", feederSpeed), 0.0, 1.0);
 
-        ShooterConstants.readyRpm = readyRpm;
-        ShooterConstants.feederSpeed = feederSpeed;        
+        boolean useDistance = SmartDashboard.getBoolean(TUNING_PREFIX + "UseDistanceForTargetRPM", true);
+        targetRpm = useDistance
+            ? calculateRpmFromDistance(getHubDistance())
+            : Math.max(0.0, getTunable("TestRPM", targetRpm));
 
-        // Check if PIDF or MaxOutput changed
-        if (motor1F != ShooterConstants.kF1
-            || motor1P != ShooterConstants.kP1
-            || motor1I != ShooterConstants.kI1
-            || motor1D != ShooterConstants.kD1
-            || max != ShooterConstants.maxOutput) {
-            ShooterConstants.kF1 = motor1F;
-            ShooterConstants.kP1 = motor1P;
-            ShooterConstants.kI1 = motor1I;
-            ShooterConstants.kD1 = motor1D;
-            ShooterConstants.maxOutput = max;
+        // ReadyRPM is the lower bound of the "charged" window; keep it at or below
+        // the setpoint so a low TestRPM cannot make isCharged() true immediately.
+        readyRpm = MathUtil.clamp(getTunable("ReadyRPM", readyRpm), 0.0, targetRpm);
+
+        if (newF != kF || newP != kP || newI != kI || newD != kD || newMaxOutput != maxOutput) {
+            kF = newF;
+            kP = newP;
+            kI = newI;
+            kD = newD;
+            maxOutput = newMaxOutput;
 
             applyClosedLoopConfig(
                 shooter1Config,
-                ShooterConstants.kP1,
-                ShooterConstants.kI1,
-                ShooterConstants.kD1,
-                ShooterConstants.kF1);
+                kP,
+                kI,
+                kD,
+                kF);
 
             // Re-apply configuration to the motor controller
             // We use kNoResetSafeParameters to avoid resetting other settings
@@ -352,6 +390,10 @@ public class Shooter extends SubsystemBase {
                 ResetMode.kNoResetSafeParameters,
                 PersistMode.kNoPersistParameters);
         }
+    }
+
+    private double getTunable(String name, double defaultValue) {
+        return SmartDashboard.getNumber(TUNING_PREFIX + name, defaultValue);
     }
 
     private void updateMotors() {
@@ -364,18 +406,18 @@ public class Shooter extends SubsystemBase {
         } else if (isVortexSpeedShotActive) {
             flywheelController1.setSetpoint(VORTEX_SPEED_SHOT_TARGET_RPM, ControlType.kVelocity);
             if (isVortexSpeedShotReady()) {
-                feederOutput = ShooterConstants.feederSpeed;
+                feederOutput = feederSpeed;
             }
         } else if (isShooterActive) {
             // Delegate PID calculation to the SPARK MAX (runs at 1 kHz on-board)
-            flywheelController1.setSetpoint(ShooterConstants.targetRpm, ControlType.kVelocity);
+            flywheelController1.setSetpoint(targetRpm, ControlType.kVelocity);
             if (isCharged() && shooterSpinTimer.hasElapsed(0.5)) {  // Add a short delay after reaching target RPM
                 feederOutput = currentFeederSpeed;
             }
         } else if (isFeederReversed) {
             // Direct reverse without shooter active — isCharged() is not involved here
             flywheelController1.setSetpoint(IDLE_RPM, ControlType.kVelocity);
-            feederOutput = -ShooterConstants.feederSpeed;
+            feederOutput = -feederSpeed;
         } else {
             flywheelController1.setSetpoint(IDLE_RPM, ControlType.kVelocity);
         }

@@ -103,6 +103,11 @@ All values published to AdvantageKit Logger or SmartDashboard.
 | `Shooter/Motor2CurrentAmps` | double | [Y] |
 | `Shooter/FeederCurrentAmps` | double | [Y] |
 | `Shooter/RPMError` | double | [Y] |
+| `Shooter/Tuning/P` | double | [Y] |
+| `Shooter/Tuning/I` | double | [Y] |
+| `Shooter/Tuning/D` | double | [Y] |
+| `Shooter/Tuning/F` | double | [Y] |
+| `Shooter/Tuning/MaxOutput` | double | [Y] |
 
 ### ClimbCommand
 
@@ -238,16 +243,23 @@ All values published to AdvantageKit Logger or SmartDashboard.
 | `Shooter/RPM` | double | [Y] |
 | `Shooter/Charged` | boolean | [Y] |
 | `Shooter/Active` | boolean | [Y] |
-| `Shooter/VortexSpeedShotReady` | boolean | [N] |
-| `Shooter/Motor1/F` | double | [N] |
-| `Shooter/Motor1/P` | double | [N] |
-| `Shooter/Motor1/I` | double | [N] |
-| `Shooter/Motor1/D` | double | [N] |
-| `Shooter/Motor2/F` | double | [N] |
-| `Shooter/Motor2/P` | double | [N] |
-| `Shooter/Motor2/I` | double | [N] |
-| `Shooter/Motor2/D` | double | [N] |
-| `Shooter/MaxOutput` | double | [N] |
+| `Shooter/VortexSpeedShotReady` | boolean | [Y] |
+
+### Shooter Tuning Inputs
+
+| Key | Type | Published |
+|-----|------|-----------|
+| `Shooter/Tuning/P` | double | [Y] |
+| `Shooter/Tuning/I` | double | [Y] |
+| `Shooter/Tuning/D` | double | [Y] |
+| `Shooter/Tuning/F` | double | [Y] |
+| `Shooter/Tuning/MaxOutput` | double | [Y] |
+| `Shooter/Tuning/ReadyRPM` | double | [Y] |
+| `Shooter/Tuning/FeederSpeed` | double | [Y] |
+| `Shooter/Tuning/TestRPM` | double | [Y] |
+| `Shooter/Tuning/UseDistanceForTargetRPM` | boolean | [Y] |
+| `Shooter/Tuning/Run Flywheel` | Command | [Y] |
+| `Shooter/Tuning/Stop Flywheel` | Command | [Y] |
 
 ### ClimbCommand
 

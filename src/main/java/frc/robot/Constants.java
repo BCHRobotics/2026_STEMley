@@ -324,18 +324,18 @@ public final class Constants {
   }
 
   public static final class ShooterConstants {
-    // Shooter tuning
-    //public static double distance = 2.0;     // Distance to target (for feedforward compensation)
-    public static double targetRpm   = 1500.0;
-    public static double readyRpm    = targetRpm * 0.98;   // Minimum RPM before feeder activates
-    public static double feederSpeed = 1.0;      // Feeder open-loop duty cycle [0, 1]
-    public static double maxOutput   = 0.85;     // Maximum closed-loop output [0, 1]
+    // Starting values for the live-tunable shooter gains. Shooter publishes these
+    // under "Shooter/Tuning/*" on SmartDashboard/Elastic and applies changes live.
+    public static final double targetRpm   = 1500.0;
+    public static final double readyRpm    = targetRpm * 0.98;   // Minimum RPM before feeder activates
+    public static final double feederSpeed = 1.0;      // Feeder open-loop duty cycle [0, 1]
+    public static final double maxOutput   = 0.85;     // Maximum closed-loop output [0, 1]
 
     // Closed-loop velocity PID gains for motors.
-    public static double kP1 = 0.003;
-    public static double kI1 = 0.0000;
-    public static double kD1 = 0.00;
-    public static double kF1 = 0.000162;
+    public static final double kP1 = 0.003;
+    public static final double kI1 = 0.0000;
+    public static final double kD1 = 0.00;
+    public static final double kF1 = 0.000162;
 
     public static final int FEEDER_CAN_ID = 21;
     public static final int SHOOTER1_CAN_ID = 22;
