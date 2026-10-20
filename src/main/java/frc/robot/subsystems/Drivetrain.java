@@ -64,7 +64,7 @@ public class Drivetrain extends SubsystemBase {
   private double slew_currentTranslationMag = 0.0;
 
   // A percentage value (0-1) for the linear speed of the robot
-  private double maxSpeed = DriveConstants.maxSpeedNormal;
+  private double maxSpeedPercent = DriveConstants.maxSpeedNormal;
 
   // slew rates (basically ramp rates?) for the swerve drive
   private SlewRateLimiter slew_magLimiter = new SlewRateLimiter(DriveConstants.kMagnitudeSlewRate);
@@ -385,7 +385,6 @@ public class Drivetrain extends SubsystemBase {
    *
    * @param xSpeed        Speed of the robot in the x direction (forward).
    * @param ySpeed        Speed of the robot in the y direction (sideways).
-   * @param maxSpeed      A 0-1 multiplier for the x and y speed of the robot.
    * @param rot           Angular rate of the robot.
    * @param fieldRelative Whether the provided x and y speeds are relative to the
    *                      field.
@@ -442,11 +441,11 @@ public class Drivetrain extends SubsystemBase {
     }
 
     /*
-     * Convert the commanded speeds into the correct units for the drivetrain,
-     * using the given max speed
+     * Convert the normalized commanded speeds into meters per second.
      */
-    double xSpeedDelivered = xSpeedCommanded * maxSpeed;
-    double ySpeedDelivered = ySpeedCommanded * maxSpeed;
+    double teleopMaxSpeed = maxSpeedPercent * DriveConstants.kMaxSpeedMetersPerSecond;
+    double xSpeedDelivered = xSpeedCommanded * teleopMaxSpeed;
+    double ySpeedDelivered = ySpeedCommanded * teleopMaxSpeed;
     double rotDelivered = slew_currentRotation * DriveConstants.maxAngularSpeed;
 
     SwerveModuleState[] swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
@@ -455,7 +454,7 @@ public class Drivetrain extends SubsystemBase {
                 getRotation2d())
             : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered));
  
-    this.setModuleStates(swerveModuleStates);
+    this.setModuleStates(swerveModuleStates, teleopMaxSpeed);
   }
 
   /**
@@ -463,8 +462,12 @@ public class Drivetrain extends SubsystemBase {
    * @param desiredStates The desired SwerveModule states.
    */
   public void setModuleStates(SwerveModuleState[] desiredStates) {
+    setModuleStates(desiredStates, DriveConstants.kMaxSpeedMetersPerSecond);
+  }
+
+  private void setModuleStates(SwerveModuleState[] desiredStates, double maxSpeedMetersPerSecond) {
     SwerveDriveKinematics.desaturateWheelSpeeds(
-        desiredStates, maxSpeed);
+        desiredStates, maxSpeedMetersPerSecond);
     frontLeftModule.setDesiredState(desiredStates[0]);
     frontRightModule.setDesiredState(desiredStates[1]);
     rearLeftModule.setDesiredState(desiredStates[2]);
@@ -522,9 +525,9 @@ public class Drivetrain extends SubsystemBase {
   // Updated the max speed of the robot based on what mode is enabled
   public void setSpeedPercent() {
     if (isTurboSpeed) {
-      maxSpeed = DriveConstants.maxSpeedTurbo;
+      maxSpeedPercent = DriveConstants.maxSpeedTurbo;
     } else {
-      maxSpeed = DriveConstants.maxSpeedNormal;
+      maxSpeedPercent = DriveConstants.maxSpeedNormal;
     }
   }   
   

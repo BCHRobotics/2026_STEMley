@@ -71,7 +71,7 @@
 
 ## Tab 3 — Swerve Modules
 
-**Type:** Swerve | **Max Speed:** 4.8 m/s | **Robot Size:** 0.65 m × 0.65 m | **Orientation:** 1
+**Type:** Swerve | **Max Speed:** 6.0 m/s | **Robot Size:** 0.65 m × 0.65 m | **Orientation:** 1
 
 | Source | Log Key | Log Type | Options | Description |
 |--------|---------|----------|---------|-------------|

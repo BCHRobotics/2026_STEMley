@@ -59,8 +59,9 @@ public final class Constants {
   public static final class DriveConstants {
     // Driving Parameters - Note that these are not the maximum and minimum capable speeds of
     // the robot, rather the allowed maximum and minimum speeds.
-    public static final double maxSpeedNormal = 0.5; // 3.3
-    public static final double maxSpeedTurbo = 1; //5.0
+    public static final double kMaxSpeedMetersPerSecond = 6.0; // m/s at 100% throttle
+    public static final double maxSpeedNormal = 0.5; // 3.0 m/s
+    public static final double maxSpeedTurbo = 1.0; // 6.0 m/s
     public static final double maxAngularSpeed = 2.0 * Math.PI; // radians per second
 
     // Slew rate limits
