@@ -1,0 +1,95 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 6.726,
+        "y": 1.034
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 8.353719039351851,
+        "y": 1.330796296296296
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 8.551009910300927,
+        "y": 2.9923174189814814
+      },
+      "prevControl": {
+        "x": 8.618040892763702,
+        "y": 2.177965749885956
+      },
+      "nextControl": {
+        "x": 8.415720992476853,
+        "y": 4.635926866319446
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 6.881746744791667,
+        "y": 2.8275037615740746
+      },
+      "prevControl": {
+        "x": 7.084896189610325,
+        "y": 3.6119287019979165
+      },
+      "nextControl": {
+        "x": 6.715686487268519,
+        "y": 2.1862920283564815
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 6.338,
+        "y": 0.691
+      },
+      "prevControl": {
+        "x": 6.861276258680556,
+        "y": 2.8121508969907403
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.8009148848684209,
+      "rotationDegrees": 106.44723096546073
+    },
+    {
+      "waypointRelativePos": 1.5552631578947373,
+      "rotationDegrees": -144.02364532754422
+    }
+  ],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 3.0,
+    "rotation": 180.0
+  },
+  "reversed": false,
+  "folder": "Stemley_path_5",
+  "idealStartingState": {
+    "velocity": 0.0,
+    "rotation": 12.040000000000001
+  },
+  "useDefaultConstraints": true
+}
