@@ -14,7 +14,7 @@
     "Climber_path_8",
     "Climber_path_9",
     "Collector_path_1",
-    "Stemley_path_2",
+    "Stemley_path_3",
     "Reset Gyro Paths",
     "Shooter_path_1",
     "Shooter_path_2",
@@ -26,7 +26,8 @@
     "Shooter_path_8",
     "Shooter_path_9",
     "Start_Pos_path",
-    "Stemley_path_1"
+    "Stemley_path_1",
+    "Stemley_path_2"
   ],
   "autoFolders": [
     "Climber_Autos",
