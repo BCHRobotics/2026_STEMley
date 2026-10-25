@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.956036024305556,
-        "y": 8.046165509259259
+        "x": -0.11407879803631715,
+        "y": 8.34286205394848
       },
       "isLocked": false,
       "linkedName": null
@@ -88,6 +88,10 @@
     {
       "waypointRelativePos": 2.4055098684210527,
       "rotationDegrees": -88.36842691276821
+    },
+    {
+      "waypointRelativePos": 3.3434210526315797,
+      "rotationDegrees": 112.90604841780845
     }
   ],
   "constraintZones": [],
@@ -95,7 +99,7 @@
   "eventMarkers": [
     {
       "name": "intake on",
-      "waypointRelativePos": 0.5962157392026577,
+      "waypointRelativePos": 0.36726536544850497,
       "endWaypointRelativePos": null,
       "command": null
     }

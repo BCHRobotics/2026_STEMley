@@ -17,12 +17,6 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "intake on"
-          }
-        },
-        {
           "type": "path",
           "data": {
             "pathName": "Stemley-3_path_2"
