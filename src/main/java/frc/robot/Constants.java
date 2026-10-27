@@ -330,6 +330,8 @@ public final class Constants {
     public static final double readyRpm    = targetRpm * 0.98;   // Minimum RPM before feeder activates
     public static final double feederSpeed = 1.0;      // Feeder open-loop duty cycle [0, 1]
     public static final double maxOutput   = 0.85;     // Maximum closed-loop output [0, 1]
+    // CHANGE #6: Limit each flywheel motor separately; followers do not inherit this setting.
+    public static final int kFlywheelCurrentLimit = 60; // amps per motor
 
     // Closed-loop velocity PID gains for motors.
     public static final double kP1 = 0.003;

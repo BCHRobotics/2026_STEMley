@@ -190,6 +190,7 @@ public class Shooter extends SubsystemBase {
         // Reuse the instance variable shooter1Config
         shooter1Config
             .inverted(true)//set to true
+            .smartCurrentLimit(ShooterConstants.kFlywheelCurrentLimit)
             .idleMode(IdleMode.kCoast);  // Coast so the flywheel spins down naturally
 
         shooter1Config.encoder
@@ -235,6 +236,7 @@ public class Shooter extends SubsystemBase {
     private void configureFollower(SparkFlexConfig config, boolean inverted) {
         config
             .follow(ShooterConstants.SHOOTER1_CAN_ID, inverted)
+            .smartCurrentLimit(ShooterConstants.kFlywheelCurrentLimit)
             .idleMode(IdleMode.kCoast);
         config.encoder.velocityConversionFactor(1.0);  // Native NEO Vortex RPM
     }
