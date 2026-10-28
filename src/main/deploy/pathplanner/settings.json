@@ -14,7 +14,8 @@
     "Climber_path_8",
     "Climber_path_9",
     "Collector_path_1",
-    "Start_Pos_path",
+    "Stemley_path_9",
+    "P_paths",
     "Reset Gyro Paths",
     "Shooter_path_1",
     "Shooter_path_2",
@@ -24,12 +25,22 @@
     "Shooter_path_6",
     "Shooter_path_7",
     "Shooter_path_8",
-    "Shooter_path_9"
+    "Shooter_path_9",
+    "Start_Pos_path",
+    "Stemley_path_1",
+    "Stemley_path_2",
+    "Stemley_path_3",
+    "Stemley_path_4",
+    "Stemley_path_5",
+    "Stemley_path_6",
+    "Stemley_path_7",
+    "Stemley_path_8"
   ],
   "autoFolders": [
     "Climber_Autos",
     "Collector_Autos",
     "DepotShoot_Autos",
+    "STEMley_Autos",
     "Shooter_Autos"
   ],
   "defaultMaxVel": 3.0,

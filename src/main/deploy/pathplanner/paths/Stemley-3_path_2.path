@@ -1,0 +1,99 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 6.729,
+        "y": 1.034
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 9.202456886574074,
+        "y": 1.1398040364583335
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 10.252094184027778,
+        "y": 3.8649375
+      },
+      "prevControl": {
+        "x": 11.074915870949074,
+        "y": 2.742538122106481
+      },
+      "nextControl": {
+        "x": 9.741963131658382,
+        "y": 4.5608000239520985
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.700434968171296,
+        "y": 3.411175057870371
+      },
+      "prevControl": {
+        "x": 8.453447048611112,
+        "y": 4.353539134837963
+      },
+      "nextControl": {
+        "x": 6.917371344365811,
+        "y": 2.431202693252602
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 6.338163483796296,
+        "y": 0.6913560474537042
+      },
+      "prevControl": {
+        "x": 7.22738302951389,
+        "y": 2.0244964554398153
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.41114309210526256,
+      "rotationDegrees": 35.90730928751621
+    },
+    {
+      "waypointRelativePos": 0.95,
+      "rotationDegrees": 131.7419550400682
+    },
+    {
+      "waypointRelativePos": 1.8424342105263154,
+      "rotationDegrees": -127.53754169683263
+    }
+  ],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 2.0,
+    "rotation": -178.5868528259725
+  },
+  "reversed": false,
+  "folder": "Stemley_path_3",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 12.040000000000001
+  },
+  "useDefaultConstraints": true
+}

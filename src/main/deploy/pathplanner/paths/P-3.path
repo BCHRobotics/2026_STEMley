@@ -8,7 +8,7 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 0.6598061734450543,
+        "x": 0.6598061734450544,
         "y": 0.8571847683677021
       },
       "isLocked": false,
@@ -20,7 +20,7 @@
         "y": 1.881
       },
       "prevControl": {
-        "x": 0.28632358651945666,
+        "x": 0.2863235865194569,
         "y": 0.4210091556299562
       },
       "nextControl": null,
@@ -52,7 +52,7 @@
     "rotation": -138.14020275157174
   },
   "reversed": false,
-  "folder": null,
+  "folder": "P_paths",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 180.0
