@@ -354,7 +354,7 @@ public class Shooter extends SubsystemBase {
         // Linear interpolation model: RPM increases with distance
         // Adjust these constants based on your shooter's ballistics
         final double MIN_DISTANCE = 1.0;      // Minimum shooting distance (meters)
-        final double MAX_DISTANCE = 195 * 0.0254;     // Maximum shooting distance (meters)
+        final double MAX_DISTANCE = 4.9;     // Maximum shooting distance (meters)
         final double MIN_RPM = 2300.0;         // RPM at minimum distance
         final double MAX_RPM = 3450.0;         // RPM at maximum distance
 
@@ -362,8 +362,7 @@ public class Shooter extends SubsystemBase {
         double clampedDistance = Math.max(MIN_DISTANCE, Math.min(MAX_DISTANCE, distanceFromHub));
 
         // Linear interpolation
-        double rpm = MIN_RPM + (clampedDistance - MIN_DISTANCE) / (MAX_DISTANCE - MIN_DISTANCE) * (MAX_RPM - MIN_RPM);
-
+        double rpm = MIN_RPM + (clampedDistance - MIN_DISTANCE) / (MAX_DISTANCE - MIN_DISTANCE) * (MAX_RPM - MIN_RPM) *1.00;
         return rpm;
     }
 

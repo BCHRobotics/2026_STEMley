@@ -109,12 +109,12 @@ public class RobotContainer {
         registerPathPlannerCommands();
 
         // Auto Paths with Climb 
-        autoChooser.addOption("OSCRT_Auto", new PathPlannerAuto("OSCRT_Auto"));
-        autoChooser.addOption("OSCRB_Auto", new PathPlannerAuto("OSCRB_Auto"));
-        autoChooser.addOption("OSCRM_Auto", new PathPlannerAuto("OSCRM_Auto"));
-        autoChooser.addOption("S8CLT_Auto", new PathPlannerAuto("S8CLT_Auto"));
-        autoChooser.addOption("S8CRT_Auto", new PathPlannerAuto("S8CRT_Auto"));
-        autoChooser.addOption("S8CRM_Auto", new PathPlannerAuto("S8CRM_Auto"));
+        // autoChooser.addOption("OSCRT_Auto", new PathPlannerAuto("OSCRT_Auto"));
+        // autoChooser.addOption("OSCRB_Auto", new PathPlannerAuto("OSCRB_Auto"));
+        // autoChooser.addOption("OSCRM_Auto", new PathPlannerAuto("OSCRM_Auto"));
+        // autoChooser.addOption("S8CLT_Auto", new PathPlannerAuto("S8CLT_Auto"));
+        // autoChooser.addOption("S8CRT_Auto", new PathPlannerAuto("S8CRT_Auto"));
+        // autoChooser.addOption("S8CRM_Auto", new PathPlannerAuto("S8CRM_Auto"));
 
         // Auto Paths without Climb (only shoot)
         // Commented out the autos that use Depot:
@@ -131,7 +131,18 @@ public class RobotContainer {
         autoChooser.addOption("S8R_Auto", new PathPlannerAuto("S8R_Auto"));
 
         // Auto paths in neutral zone with Climb
-        autoChooser.addOption("NBSCRT_Auto", new PathPlannerAuto("NBSCRT_Auto"));
+        //autoChooser.addOption("NBSCRT_Auto", new PathPlannerAuto("NBSCRT_Auto"));
+
+        // STEMley 2026 Auto Paths
+        autoChooser.addOption("NcloseSDSLB_Auto", new PathPlannerAuto("NcloseSDSLB_Auto"));
+        autoChooser.addOption("NcloseSLB_Auto", new PathPlannerAuto("NcloseSLB_Auto"));
+        autoChooser.addOption("NcloseSLT_Auto", new PathPlannerAuto("NcloseSLT_Auto"));
+        autoChooser.addOption("NcloseSRB_Auto", new PathPlannerAuto("NcloseSRB_Auto"));
+        autoChooser.addOption("NcloseSRT_Auto", new PathPlannerAuto("NcloseSRT_Auto"));
+        autoChooser.addOption("NfarSRB_Auto", new PathPlannerAuto("NfarSRB_Auto"));
+        autoChooser.addOption("IntakeTest_Auto", new PathPlannerAuto("IntakeTest_Auto"));
+        autoChooser.addOption("OSNRB_Auto", new PathPlannerAuto("OSNRB_Auto"));
+        autoChooser.addOption("OSNRT_Auto", new PathPlannerAuto("OSNRT_Auto"));
         
         // Safety null option
         autoChooser.addOption("None", Commands.none());

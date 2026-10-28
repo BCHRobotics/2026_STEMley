@@ -60,7 +60,7 @@ public final class Constants {
     // Driving Parameters - Note that these are not the maximum and minimum capable speeds of
     // the robot, rather the allowed maximum and minimum speeds.
     public static final double maxSpeedNormal = 5.0; // 3.3
-    public static final double maxSpeedTurbo = 1; //5.0
+    public static final double maxSpeedTurbo = 5.0; //5.0
     public static final double maxAngularSpeed = 2.0 * Math.PI; // radians per second
 
     // Slew rate limits
@@ -113,7 +113,7 @@ public final class Constants {
    */
   public static final class VisionConstants{
     // Number of cameras to use
-    public static final int kNumCameras = 4;
+    public static final int kNumCameras = 2;
     
     // Camera enable flags
     public static final boolean[] kCamerasEnabled = {
