@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.2413404947916673,
-        "y": 1.9243747829861118
+        "x": 1.3736947218259623,
+        "y": 2.644094151212554
       },
       "isLocked": false,
       "linkedName": null
@@ -20,12 +20,12 @@
         "y": 0.6621593605324074
       },
       "prevControl": {
-        "x": 1.010284043160368,
-        "y": 0.7559573021670725
+        "x": 1.0890442225392292,
+        "y": 0.7032952924393739
       },
       "nextControl": {
-        "x": 2.9329768518518518,
-        "y": 0.6344061053240739
+        "x": 2.933664815620592,
+        "y": 0.649285449237661
       },
       "isLocked": false,
       "linkedName": null
@@ -58,8 +58,8 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 2.0,
+    "maxAcceleration": 2.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -67,7 +67,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 44.95690247234733
+    "rotation": 47.3851117271062
   },
   "reversed": false,
   "folder": "Stemley_path_4",
@@ -75,5 +75,5 @@
     "velocity": 0,
     "rotation": -151.88
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

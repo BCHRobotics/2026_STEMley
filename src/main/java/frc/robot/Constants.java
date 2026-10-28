@@ -227,7 +227,7 @@ public final class Constants {
   // PID constants that PathPlanner uses to drive the robot
   public static final class AutoConstants {
     // the PID constants that PathPlanner uses to drive the robot
-    public static final PIDConstants translationConstants = new PIDConstants(2, 0.1, 0);
+    public static final PIDConstants translationConstants = new PIDConstants(1, 0.1, 0);
     public static final PIDConstants rotationConstants = new PIDConstants(1, 0, 0);
   }
 
@@ -319,7 +319,7 @@ public final class Constants {
 
     // Calibration: slow retract until current spike or timeout
     public static final double kCalibrateSpeed = -0.2;
-    public static final double kCalibrateCurrentThreshold = 20.0; // amps
+    public static final double kCalibrateCurrentThreshold = 4.0; // amps
     public static final double kCalibrateTimeoutSeconds = 3.0;
   }
 
@@ -330,6 +330,8 @@ public final class Constants {
     public static final double readyRpm    = targetRpm * 0.98;   // Minimum RPM before feeder activates
     public static final double feederSpeed = 1.0;      // Feeder open-loop duty cycle [0, 1]
     public static final double maxOutput   = 0.85;     // Maximum closed-loop output [0, 1]
+
+    public static final int kFlywheelCurrentLimit = 30; // amps
 
     // Closed-loop velocity PID gains for motors.
     public static final double kP1 = 0.003;

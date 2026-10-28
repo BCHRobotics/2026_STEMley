@@ -267,13 +267,13 @@ public class RobotContainer {
         DoubleSupplier leftY, leftX, rightX;
 
         if (driverPS5 != null) {
-            leftY = () -> -driverPS5.getLeftY() *0.6;
-            leftX = () -> -driverPS5.getLeftX() *0.6;
-            rightX = () -> -driverPS5.getRightX() *0.6;
+            leftY = () -> -driverPS5.getLeftY();
+            leftX = () -> -driverPS5.getLeftX();
+            rightX = () -> -driverPS5.getRightX();
         } else {
-            leftY = () -> -driverXbox.getLeftY() *0.6;
-            leftX = () -> -driverXbox.getLeftX() *0.6;
-            rightX = () -> -driverXbox.getRightX() *0.6;
+            leftY = () -> -driverXbox.getLeftY();
+            leftX = () -> -driverXbox.getLeftX();
+            rightX = () -> -driverXbox.getRightX();
         }
 
         robotDrive.setDefaultCommand(
