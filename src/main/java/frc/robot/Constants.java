@@ -344,7 +344,11 @@ public final class Constants {
     public static final int SHOOTER3_CAN_ID = 24;
     public static final int SHOOTER4_CAN_ID = 25;
 
-    //22 and 24 CAN is on shooter right camera side
-    //125 inches - 2700 rpm everyting goes in 
+    // 22 and 24 CAN is on shooter right camera side
+    // 125 inches - 2700 rpm everyting goes in 
+    // 97 inches - 2500 rpm
+    // 150 inches - 2900rpm 
+    // 195 inches - 3450 rpm (max)
+    // 1 meter - 2300  rpm
   }
 }
