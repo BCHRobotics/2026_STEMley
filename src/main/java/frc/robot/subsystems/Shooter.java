@@ -72,6 +72,8 @@ public class Shooter extends SubsystemBase {
     private boolean isVortexSpeedShotActive = false;
     private boolean isFeederReversed = false;
     private double  currentFeederSpeed = 0.0;
+    private static final double IDLE_RPM = 1500.0;
+
 
     public Shooter(Drivetrain drivetrain) {
         this.drivetrain = drivetrain;
@@ -459,7 +461,7 @@ public class Shooter extends SubsystemBase {
             feederOutput = -feederSpeed;
         } else {
             // No active shoot request means no powered idle RPM.
-            shooterMotor1.stopMotor();
+            flywheelController1.setSetpoint(IDLE_RPM, ControlType.kVelocity);
         }
 
         feederMotor.set(feederOutput);
