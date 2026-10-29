@@ -230,6 +230,11 @@ public class RobotContainer {
                     m_ballIntake.stopRun();
                 }, m_ballIntake));
         NamedCommands.registerCommand(
+                "intake retract",
+                Commands.runOnce(() -> {
+                    m_ballIntake.moveToRetractedPosition();
+                }, m_ballIntake));
+        NamedCommands.registerCommand(
                 "jiggle on", 
                 Commands.runOnce(() ->  {
                     m_ballIntake.JiggleIntake();
