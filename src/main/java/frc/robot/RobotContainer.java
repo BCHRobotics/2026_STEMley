@@ -304,7 +304,7 @@ public class RobotContainer {
 
         if (driverPS5 != null) {
             pointRearToHub = driverPS5.square();
-            intakeToggle = driverPS5.circle();
+            intakeToggle = driverPS5.L1();
             zeroHeading = driverPS5.triangle();
             extendToggle = driverPS5.cross();
             turboSpeedTrigger = driverPS5.R1();
@@ -314,7 +314,7 @@ public class RobotContainer {
             leftX = () -> -driverPS5.getLeftX();
         } else {
             pointRearToHub = driverXbox.x();
-            intakeToggle = driverXbox.b();
+            intakeToggle = driverXbox.leftBumper();
             zeroHeading = driverXbox.y();
             extendToggle = driverXbox.a();
             turboSpeedTrigger = driverXbox.rightBumper();
