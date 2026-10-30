@@ -3,32 +3,37 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 12.992610556348074,
-        "y": 7.496091298145506
+        "x": 5.787,
+        "y": 2.23
       },
       "prevControl": null,
       "nextControl": {
-        "x": 13.992610556348074,
-        "y": 7.496091298145506
+        "x": 2.950165518060837,
+        "y": 2.2674531844106465
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 4.0,
-        "y": 6.0
+        "x": 2.4967324218750004,
+        "y": 2.568735821759259
       },
       "prevControl": {
-        "x": 3.0,
-        "y": 6.0
+        "x": 2.90327269486692,
+        "y": 2.1753869415399243
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": null
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.3723325376157407,
+      "rotationDegrees": 179.1151533246037
+    }
+  ],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
@@ -42,13 +47,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": -146.35
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Stemley_path_10",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }
