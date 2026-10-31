@@ -319,7 +319,7 @@ public final class Constants {
 
     // Calibration: slow retract until current spike or timeout
     public static final double kCalibrateSpeed = -0.2;
-    public static final double kCalibrateCurrentThreshold = 4.0; // amps
+    public static final double kCalibrateCurrentThreshold = 20.0; // amps
     public static final double kCalibrateTimeoutSeconds = 3.0;
   }
 
