@@ -140,7 +140,6 @@ public class RobotContainer {
         autoChooser.addOption("NcloseSRB_Auto", new PathPlannerAuto("NcloseSRB_Auto"));
         autoChooser.addOption("NcloseSRT_Auto", new PathPlannerAuto("NcloseSRT_Auto"));
         autoChooser.addOption("NfarSRB_Auto", new PathPlannerAuto("NfarSRB_Auto"));
-        autoChooser.addOption("IntakeTest_Auto", new PathPlannerAuto("IntakeTest_Auto"));
         autoChooser.addOption("OSNRB_Auto", new PathPlannerAuto("OSNRB_Auto"));
         autoChooser.addOption("OSNRT_Auto", new PathPlannerAuto("OSNRT_Auto"));
         

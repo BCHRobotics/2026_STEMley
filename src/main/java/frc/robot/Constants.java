@@ -149,8 +149,8 @@ public final class Constants {
     public static final double kRotationDistanceWeight = 0.03;
     
     // Maximum camera-to-tag distance (meters) at which we will accept vision updates.
-    public static final double kMaxSingleTagDistance = 7.0;
-    public static final double kMaxMultiTagDistance = 7.0;
+    public static final double kMaxSingleTagDistance = 8.0;
+    public static final double kMaxMultiTagDistance = 8.0;
 
     // Reject measurements that jump too far from the current fused pose estimate.
     public static final double kMaxSingleTagPoseDeltaMeters = 1.0;
@@ -180,7 +180,7 @@ public final class Constants {
 
     // Calculations required for driving motor conversion factors and feed forward
     public static final double kDrivingMotorFreeSpeedRps = VortexMotorConstants.kFreeSpeedRpm / 60;
-    public static final double kWheelDiameterMeters = 2.98 / 39.37;
+    public static final double kWheelDiameterMeters = 0.0762; // 3 inches
     public static final double kWheelCircumferenceMeters = kWheelDiameterMeters * Math.PI;
     public static final double kDrivingMotorReduction = (45.0 * 22) / (kDrivingMotorPinionTeeth * 15);
     public static final double kDriveWheelFreeSpeedRps = (kDrivingMotorFreeSpeedRps * kWheelCircumferenceMeters) / kDrivingMotorReduction;
@@ -227,7 +227,7 @@ public final class Constants {
   // PID constants that PathPlanner uses to drive the robot
   public static final class AutoConstants {
     // the PID constants that PathPlanner uses to drive the robot
-    public static final PIDConstants translationConstants = new PIDConstants(1, 0.1, 0);
+    public static final PIDConstants translationConstants = new PIDConstants(2, 0.1, 0);
     public static final PIDConstants rotationConstants = new PIDConstants(1, 0, 0);
   }
 
